@@ -173,7 +173,7 @@ body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);min
       </div>
       <div class="date-inputs">
         <label>С</label>
-        <input type="date" id="date-from" value="2025-04-01">
+        <input type="date" id="date-from" value="2026-01-01">
         <span class="date-sep">—</span>
         <label>По</label>
         <input type="date" id="date-to">
@@ -213,12 +213,12 @@ body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);min
 </div>
 
 <script>
-var state = { date_from: '2025-04-01', date_to: '', manager: 'all' };
+var state = { date_from: '2026-01-01', date_to: '', manager: 'all' };
 
 // Plans — edit these values
 var PLAN = { participants: 100, revenue: 150000 };
 
-var TARIFF_PRICES = { 'Booster': 3500, 'Premium': 2113, 'Стандарт+': 1788, 'Стандарт': 1398 };
+var TARIFF_PRICES = { 'Booster': 5454, 'Premium': 2113, 'Standart+': 1788, 'Standart': 1398 };
 
 function probColor(p){ return p>=70?'var(--green)':p>=40?'var(--amber)':'var(--red)'; }
 
@@ -348,7 +348,6 @@ function renderStats(calls){
       </div>
     </div>
   `;
-  renderPlan();
 }
 
 function renderCalls(calls){
@@ -392,12 +391,13 @@ async function loadCalls(){
   const calls = await res.json();
   renderStats(calls);
   renderCalls(calls);
+  renderPlan(); // всегда показывает весь факт из Sheets, игнорирует период
 }
 
 function setQuick(p, btn){
   document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  if(p==='all'){ state.date_from='2025-04-01'; state.date_to=''; }
+  if(p==='all'){ state.date_from='2026-01-01'; state.date_to=''; }
   else if(p==='week'){ const [f,t]=getWeekRange(); state.date_from=f; state.date_to=t; }
   else if(p==='month'){ const [f,t]=getMonthRange(); state.date_from=f; state.date_to=t; }
   document.getElementById('date-from').value = state.date_from;
