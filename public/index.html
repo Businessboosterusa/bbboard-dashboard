@@ -6,144 +6,138 @@
 <title>BBBoard #19 — Аналитика звонков</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #0f0f11; --surface: #17171a; --surface2: #1e1e22;
-  --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
-  --text: #f0f0f2; --text2: #8a8a9a; --text3: #555562;
-  --accent: #f5c842; --accent2: #e8b800;
-  --green: #3ecf8e; --green-bg: rgba(62,207,142,0.1);
-  --amber: #f5a623; --amber-bg: rgba(245,166,35,0.1);
-  --red: #e05252; --red-bg: rgba(224,82,82,0.1);
-  --blue: #5b8dee; --blue-bg: rgba(91,141,238,0.1);
-  --radius: 10px; --radius-lg: 14px;
-}
+:root{--bg:#0f0f11;--surface:#17171a;--surface2:#1e1e22;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#f0f0f2;--text2:#8a8a9a;--text3:#555562;--accent:#f5c842;--green:#3ecf8e;--green-bg:rgba(62,207,142,0.1);--amber:#f5a623;--amber-bg:rgba(245,166,35,0.1);--red:#e05252;--red-bg:rgba(224,82,82,0.1);--blue:#5b8dee;--blue-bg:rgba(91,141,238,0.1);--gray-bg:rgba(255,255,255,0.05);--radius:10px;--radius-lg:14px}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.mono{font-family:'DM Mono',monospace}
 .shell{display:flex;min-height:100vh}
 .sidebar{width:220px;flex-shrink:0;border-right:1px solid var(--border);padding:28px 0;position:sticky;top:0;height:100vh;overflow-y:auto}
-.main{flex:1;padding:28px 32px;max-width:1020px}
-.brand{padding:0 24px 24px;border-bottom:1px solid var(--border);margin-bottom:18px}
+.main{flex:1;padding:32px 36px;max-width:1000px}
+.brand{padding:0 24px 24px;border-bottom:1px solid var(--border);margin-bottom:20px}
 .brand-name{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase}
 .brand-sub{font-size:11px;color:var(--text3);margin-top:3px}
-.nav-section{padding:0 12px;margin-bottom:6px}
-.nav-label{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:0 12px;margin-bottom:6px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius);cursor:pointer;font-size:13px;color:var(--text2);transition:all .15s;border:none;background:none;width:100%;text-align:left}
+.nav-label{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:0 24px;margin-bottom:6px}
+.nav-section{margin-bottom:16px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;margin:0 12px;border-radius:var(--radius);cursor:pointer;font-size:13px;color:var(--text2);border:none;background:none;width:calc(100% - 24px);text-align:left;transition:all .15s;font-family:'Manrope',sans-serif}
 .nav-item:hover{background:var(--surface2);color:var(--text)}
 .nav-item.active{background:rgba(245,200,66,.1);color:var(--accent)}
-.nav-icon{width:16px;height:16px;opacity:.7}
-.topbar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;gap:14px;flex-wrap:wrap}
-.topbar-left h1{font-size:21px;font-weight:700;color:var(--text)}
-.topbar-left .sub{font-size:12px;color:var(--text3);margin-top:4px}
-.topbar-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* Filters bar */
+.filters-bar{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;align-items:center}
 .filter-group{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-.filter-btn{padding:7px 13px;font-size:12px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;transition:all .15s;font-family:'Manrope',sans-serif;white-space:nowrap}
+.filter-btn{padding:8px 14px;font-size:12px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;transition:all .15s;font-family:'Manrope',sans-serif;white-space:nowrap}
 .filter-btn:hover{color:var(--text);background:var(--surface2)}
 .filter-btn.active{background:var(--accent);color:#000;font-weight:600}
-.date-range{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:6px 10px}
-.date-range label{font-size:11px;color:var(--text3)}
-.date-range input[type="date"]{background:none;border:none;color:var(--text2);font-size:12px;font-family:'Manrope',sans-serif;cursor:pointer;outline:none;width:120px}
-.date-range input::-webkit-calendar-picker-indicator{filter:invert(.5);cursor:pointer}
+.date-inputs{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:0 12px}
+.date-inputs label{font-size:11px;color:var(--text3);white-space:nowrap}
+.date-inputs input[type=date]{background:none;border:none;color:var(--text2);font-size:12px;font-family:'Manrope',sans-serif;padding:8px 4px;cursor:pointer;outline:none}
+.date-inputs input[type=date]::-webkit-calendar-picker-indicator{filter:invert(0.5);cursor:pointer}
 .date-sep{font-size:11px;color:var(--text3)}
-.apply-btn{padding:5px 11px;font-size:11px;font-weight:600;background:var(--accent);color:#000;border:none;border-radius:6px;cursor:pointer;font-family:'Manrope',sans-serif}
-.apply-btn:hover{background:var(--accent2)}
-.plan-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 22px;margin-bottom:18px}
-.plan-title{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
-.plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:16px}
-.plan-item-title{font-size:12px;color:var(--text2);margin-bottom:8px;font-weight:500}
-.plan-numbers{display:flex;align-items:baseline;gap:5px;margin-bottom:7px}
-.plan-fact{font-size:24px;font-weight:700;color:var(--text)}
-.plan-sep{font-size:14px;color:var(--text3)}
-.plan-target{font-size:14px;font-weight:500;color:var(--text3)}
-.plan-bar-bg{height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin-bottom:4px}
-.plan-bar-fill{height:100%;border-radius:3px;transition:width .4s ease}
-.plan-pct{font-size:11px;color:var(--text3)}
-.plan-inputs{display:flex;gap:8px;padding-top:14px;border-top:1px solid var(--border);align-items:flex-end}
-.plan-input-wrap{display:flex;flex-direction:column;gap:4px;flex:1}
-.plan-input-label{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
-.plan-input{background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:7px 10px;color:var(--text);font-size:13px;font-family:'Manrope',sans-serif;width:100%;outline:none}
-.plan-input:focus{border-color:var(--accent)}
-.plan-save-btn{padding:7px 16px;background:var(--accent);color:#000;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Manrope',sans-serif;white-space:nowrap}
-.plan-save-btn:hover{background:var(--accent2)}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px}
-.stat-label{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:7px}
-.stat-val{font-size:24px;font-weight:700;color:var(--text);line-height:1}
-.stat-sub{font-size:11px;color:var(--text3);margin-top:4px}
-.type-split{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px}
-.type-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 18px}
-.type-card-title{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.apply-btn{padding:6px 14px;font-size:12px;font-weight:600;background:var(--accent);color:#000;border:none;border-radius:8px;cursor:pointer;font-family:'Manrope',sans-serif;transition:opacity .15s}
+.apply-btn:hover{opacity:.85}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px}
+.stat-label{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:.05em;text-transform:uppercase;margin-bottom:10px}
+.stat-val{font-size:28px;font-weight:700;color:var(--text);line-height:1}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:6px}
+
+/* Type split */
+.type-split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.type-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px}
+.type-card-title{font-size:11px;color:var(--text3);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .type-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.type-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.type-metric-val{font-size:18px;font-weight:700;color:var(--text)}
+.type-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.type-metric-val{font-size:20px;font-weight:700;color:var(--text)}
 .type-metric-label{font-size:10px;color:var(--text3);margin-top:2px}
-.section-title{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+
+/* Plan section */
+.plan-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:16px}
+.plan-title{font-size:11px;color:var(--text3);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:16px}
+.plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.plan-card{background:var(--surface2);border-radius:var(--radius);padding:16px}
+.plan-card-label{font-size:12px;color:var(--text2);font-weight:600;margin-bottom:12px}
+.plan-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px}
+.plan-row-label{color:var(--text3)}
+.plan-row-val{font-weight:700;color:var(--text);font-family:'DM Mono',monospace}
+.plan-bar-wrap{margin-top:10px}
+.plan-bar-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:5px}
+.plan-bar-bg{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+.plan-bar-fill{height:100%;border-radius:3px;transition:width .5s}
+
+/* Calls table */
+.section-title{font-size:13px;font-weight:600;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:12px}
 .calls-table{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
-.table-head{display:grid;grid-template-columns:190px 90px 80px 70px 110px 110px;padding:9px 18px;border-bottom:1px solid var(--border)}
-.th{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.07em;text-transform:uppercase}
-.call-row{display:grid;grid-template-columns:190px 90px 80px 70px 110px 110px;padding:12px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;align-items:center}
+.table-head{display:grid;grid-template-columns:200px 90px 80px 80px 120px 100px;gap:0;padding:10px 20px;border-bottom:1px solid var(--border)}
+.th{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase}
+.call-row{display:grid;grid-template-columns:200px 90px 80px 80px 120px 100px;gap:0;padding:13px 20px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;align-items:center}
 .call-row:last-child{border-bottom:none}
 .call-row:hover{background:var(--surface2)}
-.client-info{display:flex;align-items:center;gap:9px}
-.avatar{width:28px;height:28px;border-radius:50%;background:rgba(245,200,66,.12);color:var(--accent);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.client-info{display:flex;align-items:center;gap:10px}
+.avatar{width:32px;height:32px;border-radius:50%;background:rgba(245,200,66,.15);color:var(--accent);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .client-name{font-size:13px;font-weight:600;color:var(--text)}
 .client-meta{font-size:11px;color:var(--text3);margin-top:1px}
 .td{font-size:12px;color:var(--text2)}
-.prob-cell{display:flex;align-items:center;gap:6px}
-.prob-bar-bg{width:40px;height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+.prob-cell{display:flex;align-items:center;gap:8px}
+.prob-bar-bg{width:48px;height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
 .prob-bar-fill{height:100%;border-radius:2px}
-.prob-num{font-size:12px;font-weight:600;font-family:'DM Mono',monospace;min-width:28px}
-.badge{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px}
-.badge-green{background:var(--green-bg);color:var(--green)}
-.badge-amber{background:var(--amber-bg);color:var(--amber)}
-.badge-red{background:var(--red-bg);color:var(--red)}
-.badge-gray{background:rgba(255,255,255,.05);color:var(--text3)}
-.badge-blue{background:var(--blue-bg);color:var(--blue)}
+.prob-num{font-size:12px;font-weight:600;font-family:'DM Mono',monospace;min-width:32px}
+.badge{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px}
+.b-won{background:var(--green-bg);color:var(--green)}
+.b-open{background:var(--blue-bg);color:var(--blue)}
+.b-lost{background:var(--red-bg);color:var(--red)}
+.b-abandon{background:var(--gray-bg);color:var(--text3)}
+.b-in{background:var(--blue-bg);color:var(--blue)}
+.b-out{background:var(--gray-bg);color:var(--text3)}
+
+/* Detail */
 .detail-wrap{display:none}
-.detail-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px}
+.detail-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px}
 .back-btn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text3);background:none;border:1px solid var(--border2);border-radius:var(--radius);padding:7px 14px;cursor:pointer;font-family:'Manrope',sans-serif;transition:all .15s}
 .back-btn:hover{color:var(--text);background:var(--surface2)}
-.detail-name{font-size:21px;font-weight:700;color:var(--text)}
-.detail-meta{font-size:12px;color:var(--text3);margin-top:6px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
-.detail-scores{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
-.dscore{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:13px 15px}
-.dscore-label{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
-.dscore-val{font-size:21px;font-weight:700}
-.detail-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:10px;overflow:hidden}
-.db-head{padding:12px 16px;border-bottom:1px solid var(--border);font-size:10px;font-weight:600;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
-.db-body{padding:14px 16px}
+.detail-name{font-size:22px;font-weight:700;color:var(--text)}
+.detail-meta{font-size:12px;color:var(--text3);margin-top:6px;display:flex;gap:16px;flex-wrap:wrap}
+.detail-scores{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}
+.dscore{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px}
+.dscore-label{font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.dscore-val{font-size:22px;font-weight:700}
+.detail-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:12px;overflow:hidden}
+.db-head{padding:14px 18px;border-bottom:1px solid var(--border);font-size:12px;font-weight:600;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.db-body{padding:16px 18px}
 .db-arrow{font-size:11px;color:var(--text3);transition:transform .2s}
 .db-collapsed .db-body{display:none}
 .db-collapsed .db-arrow{transform:rotate(-90deg)}
-.script-item{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--border)}
+.script-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
 .script-item:last-child{border-bottom:none}
-.script-stage{font-size:12px;font-weight:600;color:var(--text);width:110px;flex-shrink:0}
+.script-stage{font-size:12px;font-weight:600;color:var(--text);width:120px;flex-shrink:0;padding-top:1px}
 .script-comment{font-size:12px;color:var(--text2);flex:1;line-height:1.6}
-.obj-card{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;overflow:hidden}
+.obj-card{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
 .obj-card:last-child{margin-bottom:0}
-.obj-head{padding:8px 13px;background:var(--surface2);font-size:12px;font-weight:600;color:var(--text)}
-.obj-body{padding:11px 13px;display:grid;gap:7px}
+.obj-head{padding:10px 14px;background:var(--surface2);font-size:12px;font-weight:600;color:var(--text)}
+.obj-body{padding:12px 14px;display:grid;gap:8px}
 .obj-row{display:flex;gap:10px;font-size:12px}
-.obj-label{color:var(--text3);width:95px;flex-shrink:0}
+.obj-label{color:var(--text3);width:100px;flex-shrink:0}
 .obj-val{color:var(--text2);flex:1;line-height:1.6}
-.action-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.action-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
 .action-item:last-child{border-bottom:none}
 .action-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
 .action-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
 .action-detail{font-size:12px;color:var(--text2);line-height:1.6}
-.rec-item{padding:9px 12px;background:var(--surface2);border-radius:var(--radius);margin-bottom:7px;font-size:12px;color:var(--text2);line-height:1.6}
+.rec-item{padding:10px 12px;background:var(--surface2);border-radius:var(--radius);margin-bottom:8px;font-size:12px;color:var(--text2);line-height:1.6}
 .rec-item:last-child{margin-bottom:0}
-.prob-big{font-size:34px;font-weight:700;font-family:'DM Mono',monospace;margin-bottom:7px}
-.prob-bar-full{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin-bottom:14px}
+.prob-big{font-size:36px;font-weight:700;font-family:'DM Mono',monospace;margin-bottom:8px}
+.prob-bar-full{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin-bottom:16px}
 .prob-bar-full-fill{height:100%;border-radius:3px}
 .factor{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px}
 .factor:last-child{border-bottom:none}
 .factor-sign{font-weight:700;width:44px;flex-shrink:0;font-family:'DM Mono',monospace}
 .factor-text{color:var(--text2);flex:1}
-.next-step-box{margin-top:12px;padding:13px;background:rgba(91,141,238,.08);border:1px solid rgba(91,141,238,.2);border-radius:var(--radius)}
-.ns-label{font-size:10px;font-weight:600;color:var(--blue);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+.next-step-box{margin-top:12px;padding:14px;background:rgba(91,141,238,.08);border:1px solid rgba(91,141,238,.2);border-radius:var(--radius)}
+.ns-label{font-size:10px;font-weight:600;color:var(--blue);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
 .ns-text{font-size:13px;color:var(--text2);line-height:1.6}
-.summary-box{padding:13px 15px;background:rgba(245,200,66,.05);border:1px solid rgba(245,200,66,.15);border-radius:var(--radius);font-size:13px;color:var(--text2);line-height:1.7}
-.empty{padding:44px;text-align:center;color:var(--text3);font-size:13px}
+.summary-box{padding:14px 16px;background:rgba(245,200,66,.05);border:1px solid rgba(245,200,66,.15);border-radius:var(--radius);font-size:13px;color:var(--text2);line-height:1.7}
+.empty{padding:48px;text-align:center;color:var(--text3);font-size:13px}
 </style>
 </head>
 <body>
@@ -155,86 +149,52 @@ body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);min
   </div>
   <div class="nav-section">
     <div class="nav-label">Менеджеры</div>
-    <button class="nav-item active" onclick="setManager('all',this)">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      Все менеджеры
-    </button>
-    <button class="nav-item" onclick="setManager('Kamila',this)">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      Kamila
-    </button>
-    <button class="nav-item" onclick="setManager('Vitalina',this)">
-      <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      Vitalina
-    </button>
+    <button class="nav-item active" onclick="setManager('all',this)">Все менеджеры</button>
+    <button class="nav-item" onclick="setManager('Kamila',this)">Kamila</button>
+    <button class="nav-item" onclick="setManager('Vitalina',this)">Vitalina</button>
   </div>
 </aside>
 
 <main class="main">
   <div id="main-view">
-    <div class="topbar">
-      <div class="topbar-left">
-        <h1>Аналитика звонков</h1>
-        <div class="sub">BBBoard #19 · с 1 апреля 2025</div>
-      </div>
-      <div class="topbar-right">
-        <div class="filter-group">
-          <button class="filter-btn active" onclick="setPeriod('all',this)">Всё время</button>
-          <button class="filter-btn" onclick="setPeriod('week',this)">Эта неделя</button>
-          <button class="filter-btn" onclick="setPeriod('month',this)">Месяц</button>
-        </div>
-        <div class="date-range">
-          <label>С</label>
-          <input type="date" id="date-from" value="2025-04-01">
-          <span class="date-sep">—</span>
-          <label>По</label>
-          <input type="date" id="date-to">
-          <button class="apply-btn" onclick="applyDateRange()">Применить</button>
-        </div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px">
+      <div>
+        <h1 style="font-size:22px;font-weight:700;color:var(--text)">Аналитика звонков</h1>
+        <div style="font-size:12px;color:var(--text3);margin-top:4px">С 1 апреля 2025 · BBBoard #19</div>
       </div>
     </div>
 
-    <div class="plan-section">
-      <div class="plan-title">Общий план и прогресс</div>
-      <div class="plan-grid">
-        <div class="plan-item">
-          <div class="plan-item-title">Участники — план / факт</div>
-          <div class="plan-numbers">
-            <span class="plan-fact" id="pf-tickets">0</span>
-            <span class="plan-sep">/</span>
-            <span class="plan-target" id="pt-tickets">100</span>
-          </div>
-          <div class="plan-bar-bg"><div class="plan-bar-fill" id="pb-tickets" style="background:var(--green);width:0%"></div></div>
-          <div class="plan-pct" id="pp-tickets">0% выполнено</div>
-        </div>
-        <div class="plan-item">
-          <div class="plan-item-title">Продажи $ — план / факт</div>
-          <div class="plan-numbers">
-            <span class="plan-fact" id="pf-revenue">$0</span>
-            <span class="plan-sep">/</span>
-            <span class="plan-target" id="pt-revenue">$200,000</span>
-          </div>
-          <div class="plan-bar-bg"><div class="plan-bar-fill" id="pb-revenue" style="background:var(--blue);width:0%"></div></div>
-          <div class="plan-pct" id="pp-revenue">0% выполнено</div>
-        </div>
+    <!-- Filters -->
+    <div class="filters-bar">
+      <div class="filter-group">
+        <button class="filter-btn" onclick="setQuick('all',this)">Всё время</button>
+        <button class="filter-btn active" onclick="setQuick('week',this)">Текущая неделя</button>
+        <button class="filter-btn" onclick="setQuick('month',this)">Месяц</button>
       </div>
-      <div class="plan-inputs">
-        <div class="plan-input-wrap">
-          <div class="plan-input-label">План участников</div>
-          <input class="plan-input" type="number" id="inp-tickets" placeholder="напр. 100">
-        </div>
-        <div class="plan-input-wrap">
-          <div class="plan-input-label">Средний чек ($)</div>
-          <input class="plan-input" type="number" id="inp-avg" placeholder="напр. 2000">
-        </div>
-        <button class="plan-save-btn" onclick="savePlan()">Сохранить</button>
+      <div class="date-inputs">
+        <label>С</label>
+        <input type="date" id="date-from" value="2025-04-01">
+        <span class="date-sep">—</span>
+        <label>По</label>
+        <input type="date" id="date-to">
+        <button class="apply-btn" onclick="applyDates()">Применить</button>
       </div>
     </div>
 
+    <!-- Stats -->
     <div class="stats" id="stats-grid"></div>
+
+    <!-- Type split -->
     <div class="type-split" id="type-split"></div>
 
-    <div class="section-title">Все звонки</div>
+    <!-- Plan section -->
+    <div class="plan-section">
+      <div class="plan-title">План и прогресс</div>
+      <div class="plan-grid" id="plan-grid"></div>
+    </div>
+
+    <!-- Calls -->
+    <div class="section-title">Звонки</div>
     <div class="calls-table">
       <div class="table-head">
         <div class="th">Клиент</div>
@@ -253,194 +213,248 @@ body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--text);min
 </div>
 
 <script>
-var state={period:'all',manager:'all',dateFrom:'2025-04-01',dateTo:'',calls:[]};
-var plan={tickets:100,avgTicket:2000};
+var state = { date_from: '2025-04-01', date_to: '', manager: 'all' };
 
-function probColor(p){return p>=70?'var(--green)':p>=40?'var(--amber)':'var(--red)'}
+// Plans — edit these values
+var PLAN = { participants: 30, revenue: 50000 };
+
+var TARIFF_PRICES = { 'Booster': 3500, 'Premium': 2113, 'Стандарт+': 1788, 'Стандарт': 1398 };
+
+function probColor(p){ return p>=70?'var(--green)':p>=40?'var(--amber)':'var(--red)'; }
 
 function statusBadge(s){
-  var map={won:['badge-green','Won'],open:['badge-blue','Open'],abandon:['badge-amber','Abandon'],lost:['badge-red','Lost'],nq:['badge-gray','Not Qualified']};
-  var r=map[s]||['badge-gray',s];
-  return '<span class="badge '+r[0]+'">'+r[1]+'</span>';
+  const map = { won:['b-won','Won'], open:['b-open','Open'], lost:['b-lost','Lost'], abandon:['b-abandon','Abandon'] };
+  const [cls,label] = map[s]||['b-abandon',s];
+  return `<span class="badge ${cls}">${label}</span>`;
 }
 
-function typeBadge(t){return t==='Входящий'?'<span class="badge badge-blue">Вход.</span>':'<span class="badge badge-gray">Исход.</span>'}
-
-function initials(n){return n.split(' ').map(function(p){return p[0]}).join('').toUpperCase().slice(0,2)}
-
-function tariffPrice(t){var p={Booster:3500,Premium:2113,'Стандарт+':1788,'Стандарт':1398};return p[t]||0}
-
-function typeMetrics(calls,type){
-  var list=calls.filter(function(c){return c.call_type===type});
-  var won=list.filter(function(c){return c.status==='won'}).length;
-  var open=list.filter(function(c){return c.status==='open'}).length;
-  var q=list.filter(function(c){return c.qualified==='Да'});
-  var avg=q.length?Math.round(q.reduce(function(a,c){return a+c.probability},0)/q.length):0;
-  return{total:list.length,won:won,open:open,avg:avg};
+function typeBadge(t){
+  return t==='Входящий'
+    ? '<span class="badge b-in">Входящий</span>'
+    : '<span class="badge b-out">Исходящий</span>';
 }
 
-function renderPlan(calls){
-  var won=calls.filter(function(c){return c.status==='won'});
-  var ft=won.length;
-  var fr=won.reduce(function(a,c){return a+tariffPrice(c.tariff)},0);
-  var pr=plan.tickets*plan.avgTicket;
-  var pt=plan.tickets?Math.min(100,Math.round(ft/plan.tickets*100)):0;
-  var pr2=pr?Math.min(100,Math.round(fr/pr*100)):0;
-  document.getElementById('pf-tickets').textContent=ft;
-  document.getElementById('pt-tickets').textContent=plan.tickets;
-  document.getElementById('pb-tickets').style.width=pt+'%';
-  document.getElementById('pp-tickets').textContent=pt+'% выполнено';
-  document.getElementById('pf-revenue').textContent='$'+fr.toLocaleString();
-  document.getElementById('pt-revenue').textContent='$'+pr.toLocaleString();
-  document.getElementById('pb-revenue').style.width=pr2+'%';
-  document.getElementById('pp-revenue').textContent=pr2+'% выполнено';
-  document.getElementById('inp-tickets').value=plan.tickets;
-  document.getElementById('inp-avg').value=plan.avgTicket;
+function initials(n){ return n.split(' ').map(p=>p[0]).join('').toUpperCase().slice(0,2); }
+
+function calcRevenue(calls){
+  return calls.filter(c=>c.status==='won').reduce((a,c)=>{
+    const price = TARIFF_PRICES[c.tariff]||0;
+    return a + price;
+  },0);
 }
 
-function savePlan(){
-  var t=parseInt(document.getElementById('inp-tickets').value);
-  var a=parseInt(document.getElementById('inp-avg').value);
-  if(t>0)plan.tickets=t;
-  if(a>0)plan.avgTicket=a;
-  renderPlan(state.calls);
+function typeMetrics(calls, type){
+  const list = calls.filter(c=>c.call_type===type);
+  const total = list.length;
+  const won = list.filter(c=>c.status==='won').length;
+  const open = list.filter(c=>c.status==='open').length;
+  const qual = list.filter(c=>c.qualified==='Да');
+  const avg = qual.length ? Math.round(qual.reduce((a,c)=>a+c.probability,0)/qual.length) : 0;
+  return {total,won,open,avg};
+}
+
+async function renderPlan(calls){
+  // Берём факт из Google Sheets (через /api/sales-fact)
+  var ft=0, fr=0, byMgr={}, byTariff={}, updatedAt='';
+  try {
+    var sf = await fetch('/api/sales-fact').then(r=>r.json());
+    ft = sf.total_participants||0;
+    fr = sf.total_revenue||0;
+    byMgr = sf.by_manager||{};
+    byTariff = sf.by_tariff||{};
+    updatedAt = sf.updated_at||'';
+  } catch(e){}
+
+  const pPart = Math.min(100, ft ? Math.round((ft/PLAN.participants)*100) : 0);
+  const pRev  = Math.min(100, fr ? Math.round((fr/PLAN.revenue)*100) : 0);
+  const cP = pPart>=80?'var(--green)':pPart>=50?'var(--amber)':'var(--red)';
+  const cR = pRev>=80?'var(--green)':pRev>=50?'var(--amber)':'var(--red)';
+
+  // Разбивка по менеджерам
+  const mgrRows = Object.entries(byMgr).map(([m,d])=>
+    `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px">
+      <span style="color:var(--text2)">${m}</span>
+      <span style="color:var(--text3)">${d.count} уч. &nbsp;<span style="color:var(--accent);font-family:'DM Mono',monospace">$${Math.round(d.revenue).toLocaleString()}</span></span>
+    </div>`).join('');
+
+  // Разбивка по тарифам
+  const tariffColors = {Booster:'var(--green)',Premium:'var(--accent)','Стандарт+':'var(--blue)',Standart:'var(--text2)'};
+  const tariffRows = Object.entries(byTariff).map(([t,d])=>
+    `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px">
+      <span style="color:${tariffColors[t]||'var(--text2)'};">${t}</span>
+      <span style="color:var(--text3)">${d.count} уч. &nbsp;<span style="font-family:'DM Mono',monospace">$${Math.round(d.revenue).toLocaleString()}</span></span>
+    </div>`).join('');
+
+  const lastUpdate = updatedAt ? `<div style="font-size:10px;color:var(--text3);margin-top:10px">Обновлено: ${updatedAt.replace('T',' ').slice(0,16)} UTC</div>` : '';
+
+  document.getElementById('plan-grid').innerHTML = `
+    <div class="plan-card">
+      <div class="plan-card-label">Участники — из Google Sheets</div>
+      <div class="plan-row"><span class="plan-row-label">План</span><span class="plan-row-val">${PLAN.participants}</span></div>
+      <div class="plan-row"><span class="plan-row-label">Факт</span><span class="plan-row-val" style="color:var(--green)">${ft}</span></div>
+      <div class="plan-row"><span class="plan-row-label">Остаток</span><span class="plan-row-val" style="color:var(--text3)">${Math.max(0,PLAN.participants-ft)}</span></div>
+      <div class="plan-bar-wrap">
+        <div class="plan-bar-label"><span>Выполнение</span><span style="color:${cP}">${pPart}%</span></div>
+        <div class="plan-bar-bg"><div class="plan-bar-fill" style="width:${pPart}%;background:${cP}"></div></div>
+      </div>
+      ${mgrRows ? `<div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px"><div style="font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">По менеджерам</div>${mgrRows}</div>` : ''}
+    </div>
+    <div class="plan-card">
+      <div class="plan-card-label">Продажи $ — из Google Sheets</div>
+      <div class="plan-row"><span class="plan-row-label">План</span><span class="plan-row-val">$${PLAN.revenue.toLocaleString()}</span></div>
+      <div class="plan-row"><span class="plan-row-label">Факт</span><span class="plan-row-val" style="color:var(--green)">$${Math.round(fr).toLocaleString()}</span></div>
+      <div class="plan-row"><span class="plan-row-label">Остаток</span><span class="plan-row-val" style="color:var(--text3)">$${Math.max(0,PLAN.revenue-fr).toLocaleString()}</span></div>
+      <div class="plan-bar-wrap">
+        <div class="plan-bar-label"><span>Выполнение</span><span style="color:${cR}">${pRev}%</span></div>
+        <div class="plan-bar-bg"><div class="plan-bar-fill" style="width:${pRev}%;background:${cR}"></div></div>
+      </div>
+      ${tariffRows ? `<div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px"><div style="font-size:10px;color:var(--text3);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">По тарифам</div>${tariffRows}</div>` : ''}
+      ${lastUpdate}
+    </div>
+  `;
 }
 
 function renderStats(calls){
-  var total=calls.length;
-  var won=calls.filter(function(c){return c.status==='won'}).length;
-  var open=calls.filter(function(c){return c.status==='open'}).length;
-  var q=calls.filter(function(c){return c.qualified==='Да'});
-  var avg=q.length?Math.round(q.reduce(function(a,c){return a+c.probability},0)/q.length):0;
-  document.getElementById('stats-grid').innerHTML=
-    '<div class="stat"><div class="stat-label">Всего звонков</div><div class="stat-val">'+total+'</div><div class="stat-sub">за период</div></div>'+
-    '<div class="stat"><div class="stat-label">Won</div><div class="stat-val" style="color:var(--green)">'+won+'</div><div class="stat-sub">оплата получена</div></div>'+
-    '<div class="stat"><div class="stat-label">Open</div><div class="stat-val" style="color:var(--blue)">'+open+'</div><div class="stat-sub">в работе</div></div>'+
-    '<div class="stat"><div class="stat-label">Средняя вероятность</div><div class="stat-val" style="font-family:\'DM Mono\',monospace">'+avg+'%</div><div class="stat-sub">по квалиф. звонкам</div></div>';
-  var inc=typeMetrics(calls,'Входящий');
-  var out=typeMetrics(calls,'Исходящий');
-  document.getElementById('type-split').innerHTML=
-    '<div class="type-card"><div class="type-card-title"><div class="type-dot" style="background:var(--blue)"></div>Входящие звонки</div><div class="type-metrics">'+
-    '<div class="type-metric"><div class="type-metric-val">'+inc.total+'</div><div class="type-metric-label">Всего</div></div>'+
-    '<div class="type-metric"><div class="type-metric-val" style="color:var(--green)">'+inc.won+'</div><div class="type-metric-label">Won</div></div>'+
-    '<div class="type-metric"><div class="type-metric-val" style="color:var(--blue)">'+inc.open+'</div><div class="type-metric-label">Open</div></div>'+
-    '<div class="type-metric"><div class="type-metric-val" style="font-family:\'DM Mono\',monospace">'+inc.avg+'%</div><div class="type-metric-label">Вероятность</div></div></div></div>'+
-    '<div class="type-card"><div class="type-card-title"><div class="type-dot" style="background:var(--text3)"></div>Исходящие звонки</div><div class="type-metrics">'+
-    '<div class="type-metric"><div class="type-metric-val">'+out.total+'</div><div class="type-metric-label">Всего</div></div>'+
-    '<div class="type-metric"><div class="type-metric-val" style="color:var(--green)">'+out.won+'</div><div class="type-metric-label">Won</div></div>'+
-    '<div class="type-metric"><div class="type-metric-val" style="color:var(--blue)">'+out.open+'</div><div class="type-metric-label">Open</div></div>'+
-    '<div class="type-metric"><div class="type-metric-val" style="font-family:\'DM Mono\',monospace">'+out.avg+'%</div><div class="type-metric-label">Вероятность</div></div></div></div>';
+  const total = calls.length;
+  const won = calls.filter(c=>c.status==='won').length;
+  const open = calls.filter(c=>c.status==='open').length;
+  const qual = calls.filter(c=>c.qualified==='Да');
+  const avg = qual.length ? Math.round(qual.reduce((a,c)=>a+c.probability,0)/qual.length) : 0;
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat"><div class="stat-label">Всего звонков</div><div class="stat-val">${total}</div><div class="stat-sub">за период</div></div>
+    <div class="stat"><div class="stat-label">Won</div><div class="stat-val" style="color:var(--green)">${won}</div><div class="stat-sub">оплата получена</div></div>
+    <div class="stat"><div class="stat-label">Open</div><div class="stat-val" style="color:var(--blue)">${open}</div><div class="stat-sub">в работе</div></div>
+    <div class="stat"><div class="stat-label">Ср. вероятность</div><div class="stat-val mono">${avg}%</div><div class="stat-sub">по квалиф. звонкам</div></div>
+  `;
+  const inc = typeMetrics(calls,'Входящий');
+  const out = typeMetrics(calls,'Исходящий');
+  document.getElementById('type-split').innerHTML = `
+    <div class="type-card">
+      <div class="type-card-title"><div class="type-dot" style="background:var(--blue)"></div>Входящие</div>
+      <div class="type-metrics">
+        <div class="type-metric"><div class="type-metric-val">${inc.total}</div><div class="type-metric-label">Всего</div></div>
+        <div class="type-metric"><div class="type-metric-val" style="color:var(--green)">${inc.won}</div><div class="type-metric-label">Won</div></div>
+        <div class="type-metric"><div class="type-metric-val" style="color:var(--blue)">${inc.open}</div><div class="type-metric-label">Open</div></div>
+        <div class="type-metric"><div class="type-metric-val mono">${inc.avg}%</div><div class="type-metric-label">Вероятность</div></div>
+      </div>
+    </div>
+    <div class="type-card">
+      <div class="type-card-title"><div class="type-dot" style="background:var(--text3)"></div>Исходящие</div>
+      <div class="type-metrics">
+        <div class="type-metric"><div class="type-metric-val">${out.total}</div><div class="type-metric-label">Всего</div></div>
+        <div class="type-metric"><div class="type-metric-val" style="color:var(--green)">${out.won}</div><div class="type-metric-label">Won</div></div>
+        <div class="type-metric"><div class="type-metric-val" style="color:var(--blue)">${out.open}</div><div class="type-metric-label">Open</div></div>
+        <div class="type-metric"><div class="type-metric-val mono">${out.avg}%</div><div class="type-metric-label">Вероятность</div></div>
+      </div>
+    </div>
+  `;
+  renderPlan();
 }
 
 function renderCalls(calls){
-  if(!calls.length){document.getElementById('calls-body').innerHTML='<div class="empty">Звонков за выбранный период нет</div>';return}
-  document.getElementById('calls-body').innerHTML=calls.map(function(c){
-    var color=probColor(c.probability);
-    var fill=c.status==='nq'?0:c.probability;
-    return '<div class="call-row" onclick="showDetail('+c.id+')">'+
-      '<div class="client-info"><div class="avatar">'+initials(c.client_name)+'</div>'+
-      '<div><div class="client-name">'+c.client_name+'</div><div class="client-meta">'+c.manager+' · '+(c.revenue||'')+'</div></div></div>'+
-      '<div class="td">'+c.date+'</div>'+
-      '<div class="td">'+typeBadge(c.call_type)+'</div>'+
-      '<div class="td" style="font-family:\'DM Mono\',monospace;font-weight:600">'+c.score_total+'/10</div>'+
-      '<div class="prob-cell"><div class="prob-bar-bg"><div class="prob-bar-fill" style="width:'+fill+'%;background:'+color+'"></div></div>'+
-      '<span class="prob-num" style="color:'+color+'">'+c.probability+'%</span></div>'+
-      '<div>'+statusBadge(c.status)+'</div></div>';
+  if(!calls.length){ document.getElementById('calls-body').innerHTML='<div class="empty">Звонков за выбранный период нет</div>'; return; }
+  document.getElementById('calls-body').innerHTML = calls.map(c=>{
+    const color = probColor(c.probability);
+    const fill = c.status==='abandon' ? 0 : c.probability;
+    return `<div class="call-row" onclick="showDetail(${c.id})">
+      <div class="client-info"><div class="avatar">${initials(c.client_name)}</div><div><div class="client-name">${c.client_name}</div><div class="client-meta">${c.manager} · ${c.revenue||''}</div></div></div>
+      <div class="td">${c.date}</div>
+      <div class="td">${typeBadge(c.call_type)}</div>
+      <div class="td mono" style="font-weight:600">${c.score_total}/10</div>
+      <div class="prob-cell"><div class="prob-bar-bg"><div class="prob-bar-fill" style="width:${fill}%;background:${color}"></div></div><span class="prob-num" style="color:${color}">${c.probability}%</span></div>
+      <div>${statusBadge(c.status)}</div>
+    </div>`;
   }).join('');
 }
 
+function getWeekRange(){
+  const now = new Date();
+  const day = now.getDay();
+  const diff = day>=3 ? day-3 : day+4;
+  const wed = new Date(now); wed.setDate(now.getDate()-diff);
+  const tue = new Date(wed); tue.setDate(wed.getDate()+6);
+  return [wed.toISOString().split('T')[0], tue.toISOString().split('T')[0]];
+}
+
+function getMonthRange(){
+  const now = new Date();
+  const from = new Date(now.getFullYear(),now.getMonth(),1).toISOString().split('T')[0];
+  const to = now.toISOString().split('T')[0];
+  return [from,to];
+}
+
 async function loadCalls(){
-  var params=new URLSearchParams({manager:state.manager});
-  if(state.period==='week'){
-    var now=new Date(),day=now.getDay(),diff=day>=3?day-3:day+4,ws=new Date(now);
-    ws.setDate(now.getDate()-diff);
-    params.set('date_from',ws.toISOString().split('T')[0]);
-  } else if(state.period==='month'){
-    var ms=new Date();ms.setDate(1);
-    params.set('date_from',ms.toISOString().split('T')[0]);
-  } else if(state.period==='custom'){
-    if(state.dateFrom)params.set('date_from',state.dateFrom);
-    if(state.dateTo)params.set('date_to',state.dateTo);
-  } else {
-    params.set('date_from','2025-04-01');
-  }
-  var res=await fetch('/api/calls?'+params);
-  state.calls=await res.json();
-  renderStats(state.calls);
-  renderCalls(state.calls);
-  renderPlan(state.calls);
+  const params = new URLSearchParams();
+  if(state.date_from) params.set('date_from', state.date_from);
+  if(state.date_to) params.set('date_to', state.date_to);
+  if(state.manager!=='all') params.set('manager', state.manager);
+  const res = await fetch('/api/calls?'+params);
+  const calls = await res.json();
+  renderStats(calls);
+  renderCalls(calls);
 }
 
-function applyDateRange(){
-  state.dateFrom=document.getElementById('date-from').value;
-  state.dateTo=document.getElementById('date-to').value;
-  state.period='custom';
-  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active')});
-  loadCalls();
-}
-
-function setPeriod(p,btn){
-  state.period=p;
-  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active')});
+function setQuick(p, btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  if(p==='all'){ state.date_from='2025-04-01'; state.date_to=''; }
+  else if(p==='week'){ const [f,t]=getWeekRange(); state.date_from=f; state.date_to=t; }
+  else if(p==='month'){ const [f,t]=getMonthRange(); state.date_from=f; state.date_to=t; }
+  document.getElementById('date-from').value = state.date_from;
+  document.getElementById('date-to').value = state.date_to;
   loadCalls();
 }
 
-function setManager(m,btn){
-  state.manager=m;
-  document.querySelectorAll('.nav-item').forEach(function(b){b.classList.remove('active')});
+function applyDates(){
+  state.date_from = document.getElementById('date-from').value;
+  state.date_to = document.getElementById('date-to').value;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  loadCalls();
+}
+
+function setManager(m, btn){
+  state.manager = m;
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   loadCalls();
 }
 
 async function showDetail(id){
-  var res=await fetch('/api/calls/'+id);
-  var c=await res.json();
-  var fa=c.full_analysis||{};
+  const res = await fetch('/api/calls/'+id);
+  const c = await res.json();
+  const fa = c.full_analysis||{};
   document.getElementById('main-view').style.display='none';
-  var dv=document.getElementById('detail-view');
+  const dv = document.getElementById('detail-view');
   dv.style.display='block';
-  var color=probColor(c.probability);
-  var fill=c.status==='nq'?0:c.probability;
-  var scriptHtml=(fa.script||[]).map(function(s){return'<div class="script-item"><div class="script-stage">'+s.icon+' '+s.stage+'</div><div class="script-comment">'+s.comment+'</div></div>'}).join('')||'<div class="empty" style="padding:14px">Нет данных</div>';
-  var objHtml=(fa.objections||[]).length?(fa.objections||[]).map(function(o){
-    var sc=o.script_match==='Да'?'badge-green':o.script_match==='Частично'?'badge-amber':'badge-red';
-    return'<div class="obj-card"><div class="obj-head">'+o.title+'</div><div class="obj-body">'+
-      '<div class="obj-row"><span class="obj-label">Цитата</span><span class="obj-val" style="font-style:italic;color:var(--text3)">'+o.quote+'</span></div>'+
-      '<div class="obj-row"><span class="obj-label">Тип</span><span class="obj-val">'+o.type+'</span></div>'+
-      '<div class="obj-row"><span class="obj-label">Как отработал</span><span class="obj-val">'+o.how+'</span></div>'+
-      '<div class="obj-row"><span class="obj-label">По скрипту</span><span class="obj-val"><span class="badge '+sc+'">'+o.script_match+'</span></span></div>'+
-      '<div class="obj-row"><span class="obj-label">Результат</span><span class="obj-val">'+o.result+'</span></div>'+
-      '<div class="obj-row"><span class="obj-label">Как надо</span><span class="obj-val">'+o.fix+'</span></div>'+
-      '</div></div>';}).join(''):'<div style="font-size:12px;color:var(--text3)">Возражений не зафиксировано</div>';
-  var strongHtml=(fa.strong||[]).map(function(s){return'<div class="action-item"><div class="action-dot" style="background:var(--green)"></div><div><div class="action-title">'+s.text+'</div><div class="action-detail">'+s.detail+'</div></div></div>'}).join('')||'<div style="font-size:12px;color:var(--text3)">Нет данных</div>';
-  var weakHtml=(fa.weak||[]).map(function(s){return'<div class="action-item"><div class="action-dot" style="background:var(--red)"></div><div><div class="action-title">'+s.text+'</div><div class="action-detail">'+s.detail+'</div></div></div>'}).join('')||'<div style="font-size:12px;color:var(--text3)">Слабых моментов не выявлено</div>';
-  var recsHtml=(fa.recommendations||[]).map(function(r){return'<div class="rec-item">'+r+'</div>'}).join('');
-  var factorsHtml=(fa.prob_factors||[]).map(function(f){var plus=f.sign.startsWith('+');return'<div class="factor"><span class="factor-sign" style="color:'+(plus?'var(--green)':'var(--red)')+'">'+f.sign+'</span><span class="factor-text">'+f.text+'</span></div>'}).join('');
-  dv.innerHTML=
-    '<div class="detail-header"><div>'+
-    '<div class="detail-name">'+c.client_name+'</div>'+
-    '<div class="detail-meta"><span>'+c.date+'</span><span>'+c.manager+'</span>'+typeBadge(c.call_type)+statusBadge(c.status)+
-    '<span style="color:var(--text3)">'+(c.revenue||'')+'</span>'+
-    (c.doc_link?'<a href="'+c.doc_link+'" target="_blank" style="color:var(--accent);text-decoration:none;font-size:12px">Открыть Doc →</a>':'')+
-    '</div></div><button class="back-btn" onclick="backToList()">← Назад</button></div>'+
-    '<div class="detail-scores">'+
-    '<div class="dscore"><div class="dscore-label">Итоговая оценка</div><div class="dscore-val" style="color:var(--accent)">'+c.score_total+'/10</div></div>'+
-    '<div class="dscore"><div class="dscore-label">Скрипт</div><div class="dscore-val">'+c.score_script+'/10</div></div>'+
-    '<div class="dscore"><div class="dscore-label">Возражения</div><div class="dscore-val">'+c.score_objections+'/10</div></div>'+
-    '<div class="dscore"><div class="dscore-label">Вероятность</div><div class="dscore-val" style="font-family:\'DM Mono\',monospace;color:'+color+'">'+c.probability+'%</div></div></div>'+
-    '<div class="detail-block"><div class="db-head" onclick="toggleBlock(this)">Резюме для руководителя <span class="db-arrow">▾</span></div><div class="db-body"><div class="summary-box">'+(c.summary||'—')+'</div></div></div>'+
-    '<div class="detail-block"><div class="db-head" onclick="toggleBlock(this)">Соответствие скрипту <span class="db-arrow">▾</span></div><div class="db-body">'+scriptHtml+'</div></div>'+
-    '<div class="detail-block"><div class="db-head" onclick="toggleBlock(this)">База возражений <span class="db-arrow">▾</span></div><div class="db-body">'+objHtml+'</div></div>'+
-    '<div class="detail-block"><div class="db-head" onclick="toggleBlock(this)">Сильные моменты <span class="db-arrow">▾</span></div><div class="db-body">'+strongHtml+'</div></div>'+
-    '<div class="detail-block"><div class="db-head" onclick="toggleBlock(this)">Слабые моменты <span class="db-arrow">▾</span></div><div class="db-body">'+weakHtml+'</div></div>'+
-    '<div class="detail-block"><div class="db-head" onclick="toggleBlock(this)">Рекомендации <span class="db-arrow">▾</span></div><div class="db-body">'+recsHtml+'</div></div>'+
-    '<div class="detail-block"><div class="db-head" onclick="toggleBlock(this)">Прогноз сделки <span class="db-arrow">▾</span></div><div class="db-body">'+
-    '<div class="prob-big" style="color:'+color+'">'+c.probability+'%</div>'+
-    '<div class="prob-bar-full"><div class="prob-bar-full-fill" style="width:'+fill+'%;background:'+color+'"></div></div>'+
-    factorsHtml+
-    '<div class="next-step-box"><div class="ns-label">Следующий шаг</div><div class="ns-text">'+(c.next_step||'—')+'</div></div>'+
-    '</div></div>';
+  const color = probColor(c.probability);
+  const fill = c.status==='abandon'?0:c.probability;
+
+  const scriptHtml = (fa.script||[]).map(s=>`<div class="script-item"><div class="script-stage">${s.icon} ${s.stage}</div><div class="script-comment">${s.comment}</div></div>`).join('')||'<div class="empty" style="padding:16px">Нет данных</div>';
+  const objHtml = (fa.objections||[]).length?(fa.objections||[]).map(o=>`<div class="obj-card"><div class="obj-head">${o.title}</div><div class="obj-body"><div class="obj-row"><span class="obj-label">Цитата</span><span class="obj-val" style="font-style:italic;color:var(--text3)">${o.quote}</span></div><div class="obj-row"><span class="obj-label">Тип</span><span class="obj-val">${o.type}</span></div><div class="obj-row"><span class="obj-label">Как отработал</span><span class="obj-val">${o.how}</span></div><div class="obj-row"><span class="obj-label">По скрипту</span><span class="obj-val"><span class="badge ${o.script_match==='Да'?'b-won':o.script_match==='Частично'?'b-open':'b-lost'}">${o.script_match}</span></span></div><div class="obj-row"><span class="obj-label">Результат</span><span class="obj-val">${o.result}</span></div><div class="obj-row"><span class="obj-label">Как надо</span><span class="obj-val">${o.fix}</span></div></div></div>`).join(''):'<div style="font-size:12px;color:var(--text3)">Возражений не зафиксировано</div>';
+  const strongHtml = (fa.strong||[]).map(s=>`<div class="action-item"><div class="action-dot" style="background:var(--green)"></div><div><div class="action-title">${s.text}</div><div class="action-detail">${s.detail}</div></div></div>`).join('')||'<div style="font-size:12px;color:var(--text3)">Нет данных</div>';
+  const weakHtml = (fa.weak||[]).map(s=>`<div class="action-item"><div class="action-dot" style="background:var(--red)"></div><div><div class="action-title">${s.text}</div><div class="action-detail">${s.detail}</div></div></div>`).join('')||'<div style="font-size:12px;color:var(--text3)">Слабых моментов не выявлено</div>';
+  const recsHtml = (fa.recommendations||[]).map(r=>`<div class="rec-item">${r}</div>`).join('');
+  const factorsHtml = (fa.prob_factors||[]).map(f=>`<div class="factor"><span class="factor-sign" style="color:${f.sign.startsWith('+')? 'var(--green)':'var(--red)'}">${f.sign}</span><span class="factor-text">${f.text}</span></div>`).join('');
+
+  dv.innerHTML = `
+    <div class="detail-header">
+      <div><div class="detail-name">${c.client_name}</div><div class="detail-meta"><span>${c.date}</span><span>${c.manager}</span><span>${typeBadge(c.call_type)}</span><span>${statusBadge(c.status)}</span>${c.doc_link?`<a href="${c.doc_link}" target="_blank" style="color:var(--accent);text-decoration:none;font-size:12px">Открыть Doc →</a>`:''}</div></div>
+      <button class="back-btn" onclick="backToList()">← Назад</button>
+    </div>
+    <div class="detail-scores">
+      <div class="dscore"><div class="dscore-label">Итоговая оценка</div><div class="dscore-val" style="color:var(--accent)">${c.score_total}/10</div></div>
+      <div class="dscore"><div class="dscore-label">Скрипт</div><div class="dscore-val">${c.score_script}/10</div></div>
+      <div class="dscore"><div class="dscore-label">Возражения</div><div class="dscore-val">${c.score_objections}/10</div></div>
+      <div class="dscore"><div class="dscore-label">Вероятность</div><div class="dscore-val mono" style="color:${color}">${c.probability}%</div></div>
+    </div>
+    <div class="detail-block"><div class="db-head" onclick="toggleBlock(this)">Резюме для руководителя <span class="db-arrow">▾</span></div><div class="db-body"><div class="summary-box">${c.summary||'—'}</div></div></div>
+    <div class="detail-block"><div class="db-head" onclick="toggleBlock(this)">Соответствие скрипту <span class="db-arrow">▾</span></div><div class="db-body">${scriptHtml}</div></div>
+    <div class="detail-block"><div class="db-head" onclick="toggleBlock(this)">База возражений <span class="db-arrow">▾</span></div><div class="db-body">${objHtml}</div></div>
+    <div class="detail-block"><div class="db-head" onclick="toggleBlock(this)">Сильные моменты <span class="db-arrow">▾</span></div><div class="db-body">${strongHtml}</div></div>
+    <div class="detail-block"><div class="db-head" onclick="toggleBlock(this)">Слабые моменты <span class="db-arrow">▾</span></div><div class="db-body">${weakHtml}</div></div>
+    <div class="detail-block"><div class="db-head" onclick="toggleBlock(this)">Рекомендации <span class="db-arrow">▾</span></div><div class="db-body">${recsHtml}</div></div>
+    <div class="detail-block"><div class="db-head" onclick="toggleBlock(this)">Прогноз сделки <span class="db-arrow">▾</span></div><div class="db-body"><div class="prob-big" style="color:${color}">${c.probability}%</div><div class="prob-bar-full"><div class="prob-bar-full-fill" style="width:${fill}%;background:${color}"></div></div>${factorsHtml}<div class="next-step-box"><div class="ns-label">Следующий шаг</div><div class="ns-text">${c.next_step||'—'}</div></div></div></div>
+  `;
 }
 
 function backToList(){
@@ -449,9 +463,13 @@ function backToList(){
   document.getElementById('main-view').style.display='block';
 }
 
-function toggleBlock(el){el.parentElement.classList.toggle('db-collapsed')}
+function toggleBlock(el){ el.parentElement.classList.toggle('db-collapsed'); }
 
-document.getElementById('date-to').value=new Date().toISOString().split('T')[0];
+// Init with current week
+const [wf,wt] = getWeekRange();
+state.date_from = wf; state.date_to = wt;
+document.getElementById('date-from').value = wf;
+document.getElementById('date-to').value = wt;
 loadCalls();
 </script>
 </body>
